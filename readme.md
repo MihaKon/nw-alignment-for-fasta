@@ -38,7 +38,7 @@ Or provide necessary data in powershell script.
 1. Press SHIFT + RMB -> Run with PowerShell on nw_aligner.ps1
 2. Provide FASTA file path
 
-## Example Result
+## Example Result For TestData
 
 ```
 Score: 2.0
