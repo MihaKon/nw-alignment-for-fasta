@@ -1,6 +1,7 @@
 import argparse
-from Bio import SeqIO
+
 import numpy as np
+from Bio import SeqIO
 
 
 def setup_argparse():
@@ -88,15 +89,20 @@ def get_alignment(
     seq_two_index = len(seq_two)
 
     while seq_one_index > 0 or seq_two_index > 0:
-        if alignment_matrix[seq_one_index, seq_two_index] == alignment_matrix[
-            seq_one_index - 1, seq_two_index - 1
-        ] + (1 if seq_one[seq_one_index - 1] == seq_two[seq_two_index - 1] else -1):
+        if (
+            seq_one_index > 0
+            and seq_two_index > 0
+            and alignment_matrix[seq_one_index, seq_two_index]
+            == alignment_matrix[seq_one_index - 1, seq_two_index - 1]
+            + (1 if seq_one[seq_one_index - 1] == seq_two[seq_two_index - 1] else -1)
+        ):
             aligned_seq_one.append(seq_one[seq_one_index - 1])
             aligned_seq_two.append(seq_two[seq_two_index - 1])
             seq_one_index -= 1
             seq_two_index -= 1
         elif (
-            alignment_matrix[seq_one_index, seq_two_index]
+            seq_one_index > 0
+            and alignment_matrix[seq_one_index, seq_two_index]
             == alignment_matrix[seq_one_index - 1, seq_two_index] - 1
         ):
             aligned_seq_one.append(seq_one[seq_one_index - 1])
