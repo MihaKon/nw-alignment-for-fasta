@@ -40,10 +40,9 @@ Or provide necessary data in powershell script.
 
 ## Example Result
 
+```
 Score: 2.0
-
 GTTAACGC-
-
 GTCGACGCA
-
+```
 
