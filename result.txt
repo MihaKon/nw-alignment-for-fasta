@@ -1,4 +1,5 @@
-Score: 2.0
-GTTAACGC-
-GTCGACGCA
+Score: -4.0
+GTTAACGC-C-C-CCC-CCCCCCC
+||  |||| | | |||  |     
+GTCGACGCACGCTCCCGTCAGGGG
 

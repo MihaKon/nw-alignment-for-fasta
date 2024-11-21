@@ -47,11 +47,12 @@ def parse_fasta(path: str) -> tuple[SeqIO.SeqRecord]:
     return result
 
 
-def save_alignment(alignment: tuple[str, str], score: int) -> None:
+def save_alignment(alignment: tuple[str, str, str], score: int) -> None:
     with open("result.txt", "w") as file:
         file.write(f"Score: {score}\n")
         file.write(f"{alignment[0]}\n")
         file.write(f"{alignment[1]}\n")
+        file.write(f"{alignment[2]}\n")
         file.write("\n")
 
 
@@ -63,7 +64,7 @@ def get_needleman_wunsch_global_matrix(
     alignment_matrix = np.zeros((seq_one_len + 1, seq_two_len + 1))
     alignment_matrix[:, 0] = np.linspace(0, seq_one_len * gap, seq_one_len + 1)
     alignment_matrix[0, :] = np.linspace(0, seq_two_len * gap, seq_two_len + 1)
-    temp_matrix = np.zeros(3)
+    temp_matrix = np.zeros(3)   
     for i in range(seq_one_len):
         for j in range(seq_two_len):
             if seq_one[i] == seq_two[j]:
@@ -84,20 +85,23 @@ def get_alignment(
 ) -> tuple[str, str]:
     aligned_seq_one = []
     aligned_seq_two = []
+    alignment_symbols = []
 
     seq_one_index = len(seq_one)
     seq_two_index = len(seq_two)
 
     while seq_one_index > 0 or seq_two_index > 0:
+        is_match = seq_one[seq_one_index - 1] == seq_two[seq_two_index - 1]
         if (
             seq_one_index > 0
             and seq_two_index > 0
             and alignment_matrix[seq_one_index, seq_two_index]
             == alignment_matrix[seq_one_index - 1, seq_two_index - 1]
-            + (1 if seq_one[seq_one_index - 1] == seq_two[seq_two_index - 1] else -1)
+            + (1 if is_match else -1)
         ):
             aligned_seq_one.append(seq_one[seq_one_index - 1])
             aligned_seq_two.append(seq_two[seq_two_index - 1])
+            alignment_symbols.append("|" if is_match else " ")
             seq_one_index -= 1
             seq_two_index -= 1
         elif (
@@ -106,17 +110,20 @@ def get_alignment(
             == alignment_matrix[seq_one_index - 1, seq_two_index] - 1
         ):
             aligned_seq_one.append(seq_one[seq_one_index - 1])
+            alignment_symbols.append(" ")
             aligned_seq_two.append("-")
             seq_one_index -= 1
         else:
             aligned_seq_one.append("-")
+            alignment_symbols.append(" ")
             aligned_seq_two.append(seq_two[seq_two_index - 1])
             seq_two_index -= 1
 
     aligned_seq_one = "".join(aligned_seq_one[::-1])
     aligned_seq_two = "".join(aligned_seq_two[::-1])
+    alignment_symbols = "".join(alignment_symbols[::-1])
 
-    return aligned_seq_one, aligned_seq_two
+    return aligned_seq_one, alignment_symbols, aligned_seq_two
 
 
 def main():
